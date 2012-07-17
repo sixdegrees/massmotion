@@ -17,13 +17,22 @@ module Massmotion
       self.class.client
     end
 
-    def self.all
-      client.get(path).map { |k,v| new({ :id => k.to_i }.merge(v)) }
+    def self.find opts={}
+      if opts.is_a?(Hash)
+        client.get(path, opts).map { |k,v| new({ 'id' => k.to_i }.merge(v)) }
+      else
+        id = opts.to_s
+        attrs = { 'id' => id.to_i }.merge client.get([path, id].join("/"))[id]
+        new(attrs)
+      end
     end
 
-    def self.get id
-      attrs = client.get([path, id].join("/"))
-      new(attrs[id.to_s])
+    def self.all
+      self.find({})
+    end
+
+    def reload
+      
     end
 
     def path
@@ -31,7 +40,13 @@ module Massmotion
     end
 
     def save
-      client.put(path, to_hash)
+      if id.nil?
+        job = client.post(self.class.path, to_hash)
+      else
+        job = client.put(path, to_hash)
+      end
+      raise "UpdateError: #{job['request_result']}" if job['id'] == 0
+      return Job.new(job)
     end
 
     def destroy
