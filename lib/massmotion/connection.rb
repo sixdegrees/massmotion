@@ -25,10 +25,12 @@ module Massmotion
       }
       @connection ||= Faraday.new(default_options.deep_merge(connection_options)) do |builder|
         builder.use Massmotion::Request::Auth, credentials
-        # builder.use Faraday::Request::UrlEncoded
+
         builder.use FaradayMiddleware::Caching, cache_store unless cache_store.nil?
+
         builder.use FaradayMiddleware::ParseJson
-        # builder.use FaradayMiddleware::Mashify
+        builder.use Faraday::Response::RaiseError
+
         builder.adapter(adapter)
       end
     end

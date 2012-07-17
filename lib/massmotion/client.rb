@@ -1,6 +1,7 @@
 require 'massmotion/config'
 require 'massmotion/connection'
 require 'massmotion/request'
+require 'massmotion/models'
 require 'hashie'
 
 module Massmotion
