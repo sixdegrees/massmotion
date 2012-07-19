@@ -61,6 +61,11 @@ module Massmotion
 
   class Resource < Model
     path "resources"
+
+    def playlist
+      
+    end
+
   end
 
   class Job < Model
