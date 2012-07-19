@@ -13,7 +13,6 @@ module Massmotion
     # The endpoint that will be used to connect if none is set
     #
     DEFAULT_ENDPOINT            = 'http://bovideo.massmotionmedia.com'
-    DEFAULT_PLAYLIST_ENDPOINT   = 'http://webvideo.massmotionmedia.com'
 
     DEFAULT_CACHE_STORE = nil
     
@@ -24,9 +23,8 @@ module Massmotion
     VALID_OPTIONS_KEYS = [
       :adapter,
       :api_key,
-      :account_name,
+      :notification_callback,
       :connection_options,
-      :playlist_endpoint,
       :endpoint,
       :user_agent,
       :cache_store
@@ -58,15 +56,14 @@ module Massmotion
 
     # Reset all configuration options to defaults
     def reset
-      @domain                 = nil
-      self.adapter            = DEFAULT_ADAPTER
-      self.connection_options = DEFAULT_CONNECTION_OPTIONS
-      self.endpoint           = DEFAULT_ENDPOINT
-      self.playlist_endpoint  = DEFAULT_PLAYLIST_ENDPOINT
-      self.user_agent         = DEFAULT_USER_AGENT
-      self.cache_store        = DEFAULT_CACHE_STORE
-      self.api_key            = nil
-      self.account_name       = nil
+      @domain                     = nil
+      self.adapter                = DEFAULT_ADAPTER
+      self.connection_options     = DEFAULT_CONNECTION_OPTIONS
+      self.endpoint               = DEFAULT_ENDPOINT
+      self.user_agent             = DEFAULT_USER_AGENT
+      self.cache_store            = DEFAULT_CACHE_STORE
+      self.api_key                = nil
+      self.notification_callback  = nil
       self
     end
 

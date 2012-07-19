@@ -19,11 +19,9 @@ module Massmotion
 
     def self.find opts={}
       if opts.is_a?(Hash)
-        client.get(path, opts).map { |k,v| new({ 'id' => k.to_i }.merge(v)) }
+        client.get(path, opts).map { |attrs| new(attrs) }
       else
-        id = opts.to_s
-        attrs = { 'id' => id.to_i }.merge client.get([path, id].join("/"))[id]
-        new(attrs)
+        new client.get([path, opts.to_s].join("/"))
       end
     end
 
@@ -31,22 +29,21 @@ module Massmotion
       self.find({})
     end
 
+    def self.create attrs
+      begin
+        client.post(path, attrs.to_json)        
+      rescue => e
+        puts "Error: #{e.to_s}"
+        false
+      end
+    end
+
     def reload
-      
+       
     end
 
     def path
       [self.class.path, id].join("/")
-    end
-
-    def save
-      if id.nil?
-        job = client.post(self.class.path, to_hash)
-      else
-        job = client.put(path, to_hash)
-      end
-      raise "UpdateError: #{job['request_result']}" if job['id'] == 0
-      return Job.new(job)
     end
 
     def destroy
@@ -60,10 +57,25 @@ module Massmotion
   end
 
   class Resource < Model
+
     path "resources"
 
+    def self.create attrs={}
+      attrs['notification_callback'] ||= client.notification_callback if client.notification_callback
+      super(attrs)
+    end
+
     def playlist
-      
+      @playlist ||= client.get([path, 'playlist'].join("/"))
+    end
+
+    def job(refresh=false)
+      return unless current_job
+      if !refresh
+        Job.new(current_job.to_hash)
+      elsif current_job.id > 0
+        Job.find(current_job.id)
+      end
     end
 
   end

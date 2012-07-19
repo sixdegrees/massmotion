@@ -21,4 +21,10 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'multi_json',            '>= 1.0'
   gem.add_dependency 'hashie',                '~> 1.0'
   
+  # Dev deps
+  gem.add_development_dependency 'pry'
+  gem.add_development_dependency 'rake'
+  gem.add_development_dependency 'rspec'
+  gem.add_development_dependency 'webmock'
+
 end
