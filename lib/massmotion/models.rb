@@ -19,7 +19,7 @@ module Massmotion
 
     def self.find opts={}
       if opts.is_a?(Hash)
-        client.get(path, opts).map { |attrs| new(attrs) }
+        Array(client.get(path, opts)).map { |attrs| new(attrs) }
       else
         new client.get([path, opts.to_s].join("/"))
       end
@@ -82,6 +82,15 @@ module Massmotion
 
   class Job < Model
     path "jobs"
+
+    def self.pending
+      self.find(:status => 'pending')
+    end
+
+    def self.done
+      self.find(:status => 'done')
+    end
+
   end
 
 
